@@ -12,14 +12,14 @@ fun main() {
     fun part1(input: List<String>): Int {
         return input
             .map { it.chunked(it.length / 2) }
-            .flatMap { it[0].toList() intersect it[1].toList() }
+            .flatMap { (first, second) -> first.toSet() intersect second.toSet() }
             .sumOf { it.toPriority() }
     }
 
     fun part2(input: List<String>): Int {
         return input
             .chunked(3)
-            .flatMap { it[0].toList() intersect it[1].toList() intersect it[2].toList() }
+            .flatMap { (first, second, third) -> first.toSet() intersect second.toSet() intersect third.toSet() }
             .sumOf { it.toPriority() }
     }
 
