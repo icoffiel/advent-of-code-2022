@@ -23,11 +23,21 @@ fun main() {
     check(part2(input) == 919)
 }
 
+/**
+ * Checks if a Set of Int values is fully contained in another.
+ * For instance:
+ *  [1, 2, 3] is fully within [1, 2, 3, 4] (true)
+ *  [1, 2] is fully within [2, 3] (false)
+ */
 private infix fun Set<Int>.fullyContains(second: Set<Int>): Boolean {
     val intersect = this intersect second
     return intersect.toSet() == this || intersect.toSet() == second
 }
 
+/**
+ * Converts a String in the forms 1-2,3-4 into a list of IntRange.
+ * Note that the String function substringBefore is also a good suggestion for this function instead of the split by ,
+ */
 private fun String.toRangeList(): List<IntRange> {
     val split = this.split(",", "-")
     val firstElf = split[0].toInt()..split[1].toInt()
