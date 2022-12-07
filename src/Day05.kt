@@ -12,6 +12,22 @@ fun main() {
         return Movement(amount, from, to)
     }
 
+    fun Array<ArrayDeque<CharSequence>>.convertToString() = map { it.removeLast() }
+        .map { it.toString() }
+        .joinToString("") { it.replace("[", "").replace("]", "") }
+
+    fun List<String>.applyForEachMove(
+        movement: (Movement) -> Unit
+    ) {
+        filter { "move" in it }
+            .map { it.toMovement() }
+            .forEach(movement)
+    }
+
+    fun List<String>.toStackRows() = filter { "[" in it }
+        .map { it.chunked(4) { block -> block.trim() } }
+        .reversed()
+
     fun part1(input: List<String>): String {
         val stacksStrings = input.filter { "[" in it }
 
@@ -31,31 +47,20 @@ fun main() {
             }
         }
 
-        input
-            .filter { "move" in it }
-            .map { it.toMovement() }
-            .forEach {
+        input.applyForEachMove {
                 val (amount, from, to) = it
                 repeat(amount.toInt()) {
                     val popped = stacks[from.toInt() - 1].pop()
                     stacks[to.toInt() - 1].push(popped)
                 }
-
             }
 
-        return stacks
-            .map { it.removeLast() }
-            .map { it.toString() }
-            .joinToString("") { it.replace("[", "").replace("]", "") }
+        return stacks.convertToString()
     }
 
     fun part2(input: List<String>): String {
-        val stacksStrings = input.filter { "[" in it }
-        val moves = input.filter { "move" in it }
 
-        val stackRows: List<List<CharSequence>> = stacksStrings
-            .map { it.chunked(4) { block -> block.trim() } }
-            .reversed()
+        val stackRows: List<List<CharSequence>> = input.toStackRows()
 
         val stacks: Array<ArrayDeque<CharSequence>> = Array(stackRows.maxOf { it.size }) {
             ArrayDeque()
@@ -69,23 +74,18 @@ fun main() {
             }
         }
 
-        moves
-            .map { it.toMovement() }
-            .forEach {
-                val (amount, from, to) = it
-                val fromStack = stacks[from.toInt() -1]
-                val toStack = stacks[to.toInt() -1]
-                val popped = fromStack.subList(fromStack.size - amount.toInt(), fromStack.size)
-                toStack.push(popped)
-                repeat(amount.toInt()) {
-                    fromStack.pop()
-                }
+        input.applyForEachMove {
+            val (amount, from, to) = it
+            val fromStack = stacks[from.toInt() - 1]
+            val toStack = stacks[to.toInt() - 1]
+            val popped = fromStack.subList(fromStack.size - amount.toInt(), fromStack.size)
+            toStack.push(popped)
+            repeat(amount.toInt()) {
+                fromStack.pop()
             }
+        }
 
-        return stacks
-            .map { it.removeLast() }
-            .map { it.toString() }
-            .joinToString("") { it.replace("[", "").replace("]", "") }
+        return stacks.convertToString()
     }
 
     val testInput = readInput("Day05_test")

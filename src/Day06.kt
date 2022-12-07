@@ -2,19 +2,19 @@ private const val DIFFERENCE_TO_UNIQUE_INDEX_START = 1
 
 fun main() {
     fun firstNonUniqueStrings(input: String, uniqueStringLength: Int) = input
-        .windowed(uniqueStringLength) // Move over the expected length at a time
+        .windowedSequence(uniqueStringLength) // Move over the expected length at a time
         .takeWhile { it.toSet().size != uniqueStringLength }
 
     fun part1(input: String): Int {
         val uniqueStringLength = 4
-        val previousNonUniqueStrings: List<String> = firstNonUniqueStrings(input, uniqueStringLength)
+        val previousNonUniqueStrings: Sequence<String> = firstNonUniqueStrings(input, uniqueStringLength)
 
         return input.indexOf(previousNonUniqueStrings.last()) + DIFFERENCE_TO_UNIQUE_INDEX_START + uniqueStringLength
     }
 
     fun part2(input: String): Int {
         val uniqueStringLength = 14
-        val previousNonUniqueStrings: List<String> = firstNonUniqueStrings(input, uniqueStringLength)
+        val previousNonUniqueStrings: Sequence<String> = firstNonUniqueStrings(input, uniqueStringLength)
 
         return input.indexOf(previousNonUniqueStrings.last()) + DIFFERENCE_TO_UNIQUE_INDEX_START + uniqueStringLength
     }
