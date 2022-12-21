@@ -80,6 +80,17 @@ fun main() {
     }
 
 
+    fun MutableList<MutableList<String>>.printGrid() {
+        forEach { row ->
+                row.forEachIndexed { index, column ->
+                    print(String.format("%2s", column))
+                    if (index == row.size - 1) {
+                        println()
+                    }
+                }
+            }
+    }
+
     fun part2(input: List<String>): Int {
         val crt: MutableList<MutableList<String>> = createGrid(6, 40, "")
 
@@ -95,15 +106,7 @@ fun main() {
 
             }
 
-        crt
-            .forEach { row ->
-                row.forEachIndexed { index, column ->
-                    print(String.format("%2s", column))
-                    if (index == 39) {
-                        println()
-                    }
-                }
-            }
+        crt.printGrid()
 
         return input.size
     }
